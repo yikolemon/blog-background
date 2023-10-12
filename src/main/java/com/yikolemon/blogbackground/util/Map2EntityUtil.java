@@ -1,6 +1,7 @@
 //package com.yikolemon.blogbackground.util;
 //
 //import cn.hutool.core.bean.BeanUtil;
+//import com.yikolemon.blogbackground.entity.po.Blog;
 //import com.yikolemon.entity.Article;
 //
 //import java.text.ParseException;
@@ -16,6 +17,10 @@
 // * @description
 // */
 //public class Map2EntityUtil {
+//
+//    public static Blog mapToBlog(){
+//
+//    }
 //
 //
 //    public static Article maptoArticle(Map<String,Object> map) {

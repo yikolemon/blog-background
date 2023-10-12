@@ -1,5 +1,6 @@
 package com.yikolemon.blogbackground.dao;
 
+import com.yikolemon.blogbackground.entity.po.Blog;
 import com.yikolemon.blogbackground.exception.FetchBlogException;
 import com.yikolemon.blogbackground.util.CnblogsXmlUtil;
 
@@ -23,58 +24,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author yikolemon
  * @date 2023/7/30 22:51
  * @description
  */
-@Component
+@SuppressWarnings("ALL")
+@Repository
 @Slf4j
-public class MetaWbelogClient {
+public class MetaWeblogClient {
 
-    private static final Logger logger=LoggerFactory.getLogger(MetaWbelogClient.class);
+    private static final Logger logger=LoggerFactory.getLogger(MetaWeblogClient.class);
 
     private static final String CNBLOGS_URL="https://www.cnblogs.com";
 
-    @Value("${cnblogs.url}")
+    @Value("${cnblogs.metaWeblog.url}")
     private String url;
 
-    @Value("${cnblogs.username}")
+    @Value("${cnblogs.metaWeblog.username}")
     private String username;
 
 
-    @Value("${cnblogs.token}")
+    @Value("${cnblogs.metaWeblog.token}")
     private String token;
 
-    public Article getPost(String id) throws FetchBlogException {
+    public Blog getPost(String id) throws FetchBlogException {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Content-Type","application/xml");
         String body = MetaWeblogUtil.getBody(new String[]{id, username, token});
         httpPost.setEntity(new StringEntity(body));
         try {
-            try (CloseableHttpClient client= HttpClients.createDefault()) {
-                try (CloseableHttpResponse response = client.execute(httpPost)) {
-                    int resCode = response.getCode();
-                    if (resCode!=200){
-                        //出错
-                        throw new FetchBlogException("获取博客内容失败");
-                    }else {
-                        HttpEntity entity = response.getEntity();
-                        String xml = EntityUtils.toString(entity);
-                        Document document = DocumentHelper.parseText(xml);
-                        Map<String, Object> articleMap = CnblogsXmlUtil.getKVByDocument(document);
-                        return Map2EntityUtil.maptoArticle(articleMap);
-                    }
-                } catch (DocumentException | ParseException e ) {
-                    throw new RuntimeException(e);
+            try (CloseableHttpClient client= HttpClients.createDefault();
+                 CloseableHttpResponse response = client.execute(httpPost)) {
+                int resCode = response.getCode();
+                if (resCode!=200){
+                    //出错
+                    throw new FetchBlogException("获取博客内容失败");
+                }else {
+                    HttpEntity entity = response.getEntity();
+                    String xml = EntityUtils.toString(entity);
+                    org.dom4j.Document document = DocumentHelper.parseText(xml);
+                    Map<String, String> articleMap = CnblogsXmlUtil.getKVByDocument(document);
+                    //return Map2EntityUtil.maptoArticle(articleMap);
+                    //TODO
+                    return null;
                 }
+            } catch (DocumentException | ParseException e ) {
+                throw new RuntimeException(e);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -119,5 +121,40 @@ public class MetaWbelogClient {
             }
         }
         return  builder.toString();
+    }
+
+    private static Blog mapToBlog(Map<String,Object> map){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+        map.get("dateCreated");
+        //时间进行特殊处理注入
+//        String dateCreated = (String) map.remove("dateCreated");
+//        //将description修改为content
+//        String description = (String) map.get("description");
+//        map.remove("description");
+//        map.put("content",description);
+//        String postid = (String) map.remove("postid");
+//        map.put("id",postid);
+//        List<String> categories = (List<String>)map.remove("categories");
+//        for (String category : categories) {
+//            if (category.contains("随笔分类")) {
+//                map.put("category", category.replace("[随笔分类]", ""));
+//                break;
+//            }
+//        }
+//        if (map.containsKey("mt_keywords")){
+//            String keywordsStr = (String)map.remove("mt_keywords");
+//            String[] keywords = keywordsStr.split(",");
+//            map.put("tags",keywords);
+//        }
+//        Article article = BeanUtil.mapToBean(map, Article.class, true);
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+//        try {
+//            Date parse = simpleDateFormat.parse(dateCreated);
+//            article.setCreateTime(parse);
+//            return article;
+//        } catch (java.text.ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+        return null;
     }
 }
