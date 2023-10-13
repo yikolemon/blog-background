@@ -12,6 +12,7 @@ public class MybatisHandler implements MetaObjectHandler {
 	public void insertFill(MetaObject metaObject) {
 		//属性名
 		this.setFieldValByName("createTime", new Date(), metaObject);
+		this.setFieldValByName("deleted",0,metaObject);
 	}
  
 	@Override

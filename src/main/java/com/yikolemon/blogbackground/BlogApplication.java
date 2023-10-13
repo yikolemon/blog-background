@@ -3,6 +3,7 @@ package com.yikolemon.blogbackground;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date  2023/10/8
  */
 @SpringBootApplication
+@EnableScheduling
 @MapperScan("com.yikolemon.blogbackground.mapper")
 public class BlogApplication {
 

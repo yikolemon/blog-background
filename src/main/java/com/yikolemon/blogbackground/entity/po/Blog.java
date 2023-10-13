@@ -1,7 +1,10 @@
 package com.yikolemon.blogbackground.entity.po;
 
 import com.baomidou.mybatisplus.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +14,9 @@ import java.util.Date;
  * @since 2023-10-08
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Blog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +30,7 @@ public class Blog implements Serializable {
     private Date createTime;
     private Date updateTime;
     private Integer view;
-    @TableField(value = "is_deleted")
+    @TableField(value = "is_deleted",fill = FieldFill.INSERT)
     private Integer deleted;
     private String tagStr;
     private String categoryStr;

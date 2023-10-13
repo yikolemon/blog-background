@@ -23,8 +23,8 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -71,11 +71,11 @@ public class MetaWeblogClient {
                     String xml = EntityUtils.toString(entity);
                     org.dom4j.Document document = DocumentHelper.parseText(xml);
                     Map<String, String> articleMap = CnblogsXmlUtil.getKVByDocument(document);
-                    //return Map2EntityUtil.maptoArticle(articleMap);
-                    //TODO
-                    return null;
+                    return mapToBlog(articleMap);
                 }
             } catch (DocumentException | ParseException e ) {
+                throw new RuntimeException(e);
+            } catch (java.text.ParseException e) {
                 throw new RuntimeException(e);
             }
         } catch (IOException e) {
@@ -89,7 +89,7 @@ public class MetaWeblogClient {
                 page;
     }
 
-    private List<String> getBlogList(Integer page){
+    public List<String> getBlogList(Integer page){
         String reptileURl = getReptileURl(page);
         Document doc=null;
         try{
@@ -123,38 +123,33 @@ public class MetaWeblogClient {
         return  builder.toString();
     }
 
-    private static Blog mapToBlog(Map<String,Object> map){
+    private static Blog mapToBlog(Map<String,String> map) throws java.text.ParseException {
+        String id=map.get("postid");
+        String title=map.get("title");
+        String content=map.get("description");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
-        map.get("dateCreated");
-        //时间进行特殊处理注入
-//        String dateCreated = (String) map.remove("dateCreated");
-//        //将description修改为content
-//        String description = (String) map.get("description");
-//        map.remove("description");
-//        map.put("content",description);
-//        String postid = (String) map.remove("postid");
-//        map.put("id",postid);
-//        List<String> categories = (List<String>)map.remove("categories");
-//        for (String category : categories) {
-//            if (category.contains("随笔分类")) {
-//                map.put("category", category.replace("[随笔分类]", ""));
-//                break;
-//            }
-//        }
-//        if (map.containsKey("mt_keywords")){
-//            String keywordsStr = (String)map.remove("mt_keywords");
-//            String[] keywords = keywordsStr.split(",");
-//            map.put("tags",keywords);
-//        }
-//        Article article = BeanUtil.mapToBean(map, Article.class, true);
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
-//        try {
-//            Date parse = simpleDateFormat.parse(dateCreated);
-//            article.setCreateTime(parse);
-//            return article;
-//        } catch (java.text.ParseException e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        String dateCreated = map.get("dateCreated");
+        Date creatTime = simpleDateFormat.parse(dateCreated);
+        String categoryStr =getCategoryStr(map.get("categories"));
+        return Blog.builder().id(id)
+                .title(title)
+                .content(content)
+                .createTime(creatTime)
+                .categoryStr(categoryStr)
+                .build();
+    }
+
+
+    private static String getCategoryStr(String categories){
+        if (StringUtils.isEmpty(categories)){
+            return "";
+        }
+        String[] split = categories.split(",");
+        for (String str : split) {
+            if (str.contains("[随笔分类]")){
+                return str.substring(6);
+            }
+        }
+        return "";
     }
 }

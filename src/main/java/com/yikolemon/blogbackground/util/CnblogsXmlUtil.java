@@ -13,8 +13,6 @@ import java.util.*;
  * @description XML请求获取博客内容
  */
 public class CnblogsXmlUtil {
-
-
     public static List<Element> getTargetElementByName(Document document){
         Element rootElement = document.getRootElement();
         rootElement.normalize();
@@ -50,9 +48,6 @@ public class CnblogsXmlUtil {
 
     }
 
-
-
-
     /**
      * 通过List<Element> member列表，获取其中的name-value键值对，以Map<String,String>形式返回
      */
@@ -64,7 +59,6 @@ public class CnblogsXmlUtil {
             String nameStr = nameElement.getText();
             //在value解析时，会把\n解析成一个defaultText对象，所以需要去除这些对象
             String valStr = getValStr(valueElement);
-            System.out.println(valStr);
             map.put(nameStr,valStr);
         }
         return map;
@@ -99,19 +93,5 @@ public class CnblogsXmlUtil {
         return getMemberKV(list);
     }
 
-    /**因为单个Value的Element还包含一层类型的标签，所以需要特殊处理，取出内容
-     * @return Value的String内容
-     */
-    public static Element getValueElements(Element valueElement){
-        Iterator<Element> iterator = valueElement.elementIterator();
-        while (iterator.hasNext()) {
-            Element next = iterator.next();
-            if (next.getNodeType()== Node.ELEMENT_NODE){
-                //说明是element节点
-                return next;
-            }
-        }
-        return null;
-    }
 
 }
