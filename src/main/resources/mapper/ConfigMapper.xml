@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yikolemon.blogbackground.mapper.ConfigMapper">
+
+    <select id="selectValueByKey" resultType="string">
+        select value from config where config.`key` = #{key} and is_deleted = 0
+    </select>
+
+    <update id="updateValueByKey">
+        update config set `value`=#{value} where `key`=#{key} and is_deleted = 0
+    </update>
+</mapper>
