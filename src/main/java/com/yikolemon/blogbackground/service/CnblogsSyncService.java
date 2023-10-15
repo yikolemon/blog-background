@@ -12,4 +12,6 @@ public interface CnblogsSyncService {
 
     void switchSyncCnblogs();
 
+    void syncCnblogs();
+
 }

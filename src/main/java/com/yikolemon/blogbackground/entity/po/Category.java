@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +16,8 @@ import java.util.Date;
  * @since 2023-10-08
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,4 +32,7 @@ public class Category implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
 
+    public Category(String name) {
+        this.name = name;
+    }
 }

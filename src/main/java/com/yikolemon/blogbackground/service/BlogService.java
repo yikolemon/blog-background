@@ -14,6 +14,5 @@ import com.yikolemon.blogbackground.entity.po.Blog;
  */
 public interface BlogService extends IService<Blog> {
 
-    void syncCnblogs();
 
 }
