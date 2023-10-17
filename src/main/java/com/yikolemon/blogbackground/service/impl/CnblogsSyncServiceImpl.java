@@ -64,10 +64,9 @@ public class CnblogsSyncServiceImpl implements CnblogsSyncService {
             allBlogList.addAll(blogList);
             pageNum++;
         }
-        blogService.saveOrUpdateBatch(allBlogList);
+        blogService.saveOrUpdateBatchIgnoreLogicDelete(allBlogList);
         List<Category> categoryList = getCategoryList(allBlogList);
         categoryService.saveOrUpdateBatch(categoryList);
-
     }
 
     private List<Category> getCategoryList(List<Blog> blogList){

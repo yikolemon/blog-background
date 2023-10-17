@@ -2,7 +2,8 @@ package com.yikolemon.blogbackground.mapper;
 
 import com.yikolemon.blogbackground.entity.po.Blog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 public interface BlogMapper extends BaseMapper<Blog> {
 
+    List<Blog> getBlogList();
+
+    int updateBlogIgnoreLogicDelete(Blog blog);
 }
