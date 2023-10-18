@@ -1,9 +1,6 @@
 package com.yikolemon.blogbackground.entity.po;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -23,7 +20,7 @@ public class Config {
 
     private String key;
     private String value;
-    @TableField(value = "is_deleted")
+    @TableLogic(value = "is_deleted")
     private Integer deleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

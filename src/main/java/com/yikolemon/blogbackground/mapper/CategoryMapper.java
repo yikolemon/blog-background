@@ -2,7 +2,6 @@ package com.yikolemon.blogbackground.mapper;
 
 import com.yikolemon.blogbackground.entity.po.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>

@@ -33,7 +33,9 @@ public class Blog implements Serializable {
     @TableField(value = "is_deleted",fill = FieldFill.INSERT)
     private Integer deleted;
     private String tagStr;
+
     private String categoryStr;
+
     private String categoryId;
 
     @Override

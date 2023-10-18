@@ -38,6 +38,7 @@ public class CnblogsSyncServiceImpl implements CnblogsSyncService {
     @Resource
     MetaWeblogClient metaWeblogClient;
 
+
     @Override
     public void switchSyncCnblogs() {
         String enable = configMapper.selectValueByKey(ConfigKeyUtil.CNBLOGS_SYNC_ENABLE);
@@ -64,9 +65,12 @@ public class CnblogsSyncServiceImpl implements CnblogsSyncService {
             allBlogList.addAll(blogList);
             pageNum++;
         }
-        blogService.saveOrUpdateBatchIgnoreLogicDelete(allBlogList);
         List<Category> categoryList = getCategoryList(allBlogList);
-        categoryService.saveOrUpdateBatch(categoryList);
+        categoryService.saveOrUpdateByName(categoryList);
+        List<Category> dataBaseCategoryList = categoryService.list();
+        Map<String, String> categoryNameToId = dataBaseCategoryList.stream().collect(Collectors.toMap(Category::getName, Category::getId));
+        allBlogList.forEach(blog -> blog.setCategoryId(categoryNameToId.getOrDefault(blog.getCategoryStr(),null)));
+        blogService.saveOrUpdateBatchIgnoreLogicDelete(allBlogList);
     }
 
     private List<Category> getCategoryList(List<Blog> blogList){
